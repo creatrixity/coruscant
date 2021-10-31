@@ -3,8 +3,12 @@ import { useState, useEffect, useCallback } from "react";
 const api = {
   GET: async (url) => {
     const response = await fetch(url);
-    const data = await response.json();
-    return data;
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Encountered an error making GET request to " + url);
+    }
   },
 };
 

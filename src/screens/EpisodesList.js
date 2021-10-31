@@ -10,6 +10,7 @@ import {
 import { ReactComponent as StarWarsLogo } from "../assets/star-wars-logo.svg";
 import useQuery from "../hooks/useQuery";
 import "./EpisodesList.css";
+import { Spinner } from "@chakra-ui/spinner";
 
 const EpisodesList = () => {
   const episode = useSearchParam("episode");
@@ -25,13 +26,8 @@ const EpisodesList = () => {
     isSuccess: singleEpisodeLoaded,
     isError: singleEpisodeErrored,
     data: singleEpisode,
+    refetch: refetchSingleEpisode,
   } = useQuery(episode ? `/films/${episode}` : null);
-
-  console.log({
-    isLoadingSingleEpisode,
-    singleEpisodeLoaded,
-    singleEpisodeErrored,
-  });
 
   useEffect(() => {
     // alert("On episode: " + episode);
@@ -102,18 +98,34 @@ const EpisodesList = () => {
         borderRadius="lg"
         justifyContent="center"
       >
-        {isLoadingSingleEpisode ? <Skeleton height="40px" mb={2} /> : null}
+        {isLoadingSingleEpisode ? (
+          <Spinner color="red.500" size="xl" />
+        ) : !isLoadingSingleEpisode && !singleEpisodeErrored ? (
+          <StarWarsLogo />
+        ) : null}
         <Box color="gray.200">
-          {!singleEpisodeLoaded || !episode ? (
-            <StarWarsLogo />
-          ) : (
+          {singleEpisodeErrored ? (
+            <Box display="flex" flexDirection="column">
+              <Box fontSize={"3xl"} mb={3}>
+                Failed to fetch episode
+              </Box>
+              <Button
+                onClick={refetchSingleEpisode}
+                colorScheme={"yellow"}
+                variant="outline"
+              >
+                Retry fetching episode {episode}
+              </Button>
+            </Box>
+          ) : null}
+          {episode && singleEpisodeLoaded ? (
             <section className="star-wars">
               <div className="crawl">
                 <div className="title">{singleEpisode.title}</div>
                 <p>{singleEpisode.opening_crawl}</p>
               </div>
             </section>
-          )}
+          ) : null}
         </Box>
       </Container>
     </Box>
