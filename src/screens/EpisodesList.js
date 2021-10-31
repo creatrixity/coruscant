@@ -1,5 +1,5 @@
+import { useEffect } from "react";
 import { useSearchParam } from "react-use";
-
 import {
   Box,
   Button,
@@ -8,10 +8,10 @@ import {
   Skeleton,
 } from "../components";
 import { ReactComponent as StarWarsLogo } from "../assets/star-wars-logo.svg";
-import useEpisodesQuery from "../hooks/useEpisodesQuery";
-import { useEffect } from "react";
+import useQuery from "../hooks/useQuery";
+import "./EpisodesList.css";
 
-const EpisodesList = ({ ...props }) => {
+const EpisodesList = () => {
   const episode = useSearchParam("episode");
   const {
     isLoading: isLoadingEpisodes,
@@ -19,25 +19,47 @@ const EpisodesList = ({ ...props }) => {
     isError: episodesErrored,
     refetch,
     data,
-  } = useEpisodesQuery();
+  } = useQuery(`/films`);
+  const {
+    isLoading: isLoadingSingleEpisode,
+    isSuccess: singleEpisodeLoaded,
+    isError: singleEpisodeErrored,
+    data: singleEpisode,
+  } = useQuery(episode ? `/films/${episode}` : null);
+
+  console.log({
+    isLoadingSingleEpisode,
+    singleEpisodeLoaded,
+    singleEpisodeErrored,
+  });
 
   useEffect(() => {
     // alert("On episode: " + episode);
   }, [episode]);
 
   const handleEpisodeSelect = (e) => {
+    const { value } = e.target;
     const url = new URL(window.location);
-    url.searchParams.set("episode", e.target.value);
+    if (value) {
+      url.searchParams.set("episode", value);
+    } else {
+      url.searchParams.delete("episode");
+    }
 
     window.history.pushState({}, "", url);
   };
 
+  const sortByReleaseDate = (a, b) =>
+    new Date(a.release_date) - new Date(b.release_date);
+
   const episodes = episodesLoaded
-    ? data.results.map(({ title, url, episode_id }) => ({
-        title,
-        url,
-        episode_id,
-      }))
+    ? data.results
+        .sort(sortByReleaseDate)
+        .map(({ title, url, episode_id }) => ({
+          title,
+          url,
+          episode_id,
+        }))
     : [];
 
   return (
@@ -80,7 +102,19 @@ const EpisodesList = ({ ...props }) => {
         borderRadius="lg"
         justifyContent="center"
       >
-        <StarWarsLogo />
+        {isLoadingSingleEpisode ? <Skeleton height="40px" mb={2} /> : null}
+        <Box color="gray.200">
+          {!singleEpisodeLoaded || !episode ? (
+            <StarWarsLogo />
+          ) : (
+            <section className="star-wars">
+              <div className="crawl">
+                <div className="title">{singleEpisode.title}</div>
+                <p>{singleEpisode.opening_crawl}</p>
+              </div>
+            </section>
+          )}
+        </Box>
       </Container>
     </Box>
   );

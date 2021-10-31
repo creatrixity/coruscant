@@ -8,7 +8,7 @@ const api = {
   },
 };
 
-export default function useQuery(url) {
+export default function useQuery(path) {
   const [error, setError] = useState();
   const [status, setStatus] = useState("idle");
   const [data, setData] = useState();
@@ -16,7 +16,7 @@ export default function useQuery(url) {
   const handleStartFetch = async () => {
     try {
       setStatus("loading");
-      let data = await api.GET(url);
+      let data = await api.GET(process.env.REACT_APP_API_URL + path);
 
       setError();
       setData(data);
@@ -27,11 +27,13 @@ export default function useQuery(url) {
     }
   };
 
-  const startFetch = useCallback(handleStartFetch, [url]);
+  const startFetch = useCallback(handleStartFetch, [path]);
 
   useEffect(() => {
-    startFetch();
-  }, [startFetch]);
+    if (path) {
+      startFetch();
+    }
+  }, [startFetch, path]);
 
   return {
     data,
