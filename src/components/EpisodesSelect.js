@@ -1,16 +1,19 @@
 import { Select } from ".";
 
-const EpisodesSelect = ({ ...props }) => {
+const EpisodesSelect = ({ episodes, onSelectEpisode }) => {
   return (
     <Select
       bg="black"
       placeholder="Choose a movie to display"
       size="lg"
       color="white"
+      onChange={onSelectEpisode}
     >
-      <option value="option1">Option 1</option>
-      <option value="option2">Option 2</option>
-      <option value="option3">Option 3</option>
+      {episodes.map(({ title, url, episode_id }) => (
+        <option value={episode_id} key={url}>
+          {title}
+        </option>
+      ))}
     </Select>
   );
 };

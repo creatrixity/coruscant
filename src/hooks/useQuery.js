@@ -19,8 +19,8 @@ export default function useQuery(url) {
       let data = await api.GET(url);
 
       setError();
-      setStatus("success");
       setData(data);
+      setStatus("success");
     } catch (error) {
       setError(error);
       setStatus("error");
