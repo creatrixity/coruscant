@@ -97,7 +97,7 @@ const EpisodesList = () => {
         bg="black"
         maxW="container.lg"
         centerContent
-        h={"70vh"}
+        h={"50vh"}
         px={6}
         borderRadius="lg"
         justifyContent="center"
