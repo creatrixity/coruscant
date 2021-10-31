@@ -1,8 +1,10 @@
-# Getting Started with Create React App
+# About Coruscant
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Interested in Star Wars, you should go here [https://coruscant.netlify.com](https://coruscant.netlify.com).
 
-## Available Scripts
+This is a visual wiki for the Star Wars movies (I'm a fan).
+
+## How to run
 
 In the project directory, you can run:
 
