@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useSearchParam } from "react-use";
 import {
   Box,
@@ -7,10 +6,12 @@ import {
   EpisodesSelect,
   Skeleton,
 } from "../components";
-import { ReactComponent as StarWarsLogo } from "../assets/star-wars-logo.svg";
+import SingleEpisodeCrawl from "./SingleEpisodeCrawl";
 import useQuery from "../hooks/useQuery";
 import "./EpisodesList.css";
-import { Spinner } from "@chakra-ui/spinner";
+
+const sortByReleaseDate = (a, b) =>
+  new Date(a.release_date) - new Date(b.release_date);
 
 const EpisodesList = () => {
   const episode = useSearchParam("episode");
@@ -29,13 +30,10 @@ const EpisodesList = () => {
     refetch: refetchSingleEpisode,
   } = useQuery(episode ? `/films/${episode}` : null);
 
-  useEffect(() => {
-    // alert("On episode: " + episode);
-  }, [episode]);
-
   const handleEpisodeSelect = (e) => {
     const { value } = e.target;
     const url = new URL(window.location);
+
     if (value) {
       url.searchParams.set("episode", value);
     } else {
@@ -44,9 +42,6 @@ const EpisodesList = () => {
 
     window.history.pushState({}, "", url);
   };
-
-  const sortByReleaseDate = (a, b) =>
-    new Date(a.release_date) - new Date(b.release_date);
 
   const episodes = episodesLoaded
     ? data.results
@@ -89,45 +84,14 @@ const EpisodesList = () => {
           </Box>
         ) : null}
       </Container>
-      <Container
-        bg="black"
-        maxW="container.lg"
-        centerContent
-        h={"50vh"}
-        px={6}
-        borderRadius="lg"
-        justifyContent="center"
-      >
-        {isLoadingSingleEpisode ? (
-          <Spinner color="red.500" size="xl" />
-        ) : !isLoadingSingleEpisode && !singleEpisodeErrored ? (
-          <StarWarsLogo />
-        ) : null}
-        <Box color="gray.200">
-          {singleEpisodeErrored ? (
-            <Box display="flex" flexDirection="column">
-              <Box fontSize={"3xl"} mb={3}>
-                Failed to fetch episode
-              </Box>
-              <Button
-                onClick={refetchSingleEpisode}
-                colorScheme={"yellow"}
-                variant="outline"
-              >
-                Retry fetching episode {episode}
-              </Button>
-            </Box>
-          ) : null}
-          {episode && singleEpisodeLoaded ? (
-            <section className="star-wars">
-              <div className="crawl">
-                <div className="title">{singleEpisode.title}</div>
-                <p>{singleEpisode.opening_crawl}</p>
-              </div>
-            </section>
-          ) : null}
-        </Box>
-      </Container>
+      <SingleEpisodeCrawl
+        isLoading={isLoadingSingleEpisode}
+        isSuccess={singleEpisodeLoaded}
+        isError={singleEpisodeErrored}
+        episode={singleEpisode}
+        episode_id={episode}
+        onRefetch={refetchSingleEpisode}
+      />
     </Box>
   );
 };
