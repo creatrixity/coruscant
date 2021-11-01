@@ -21,6 +21,8 @@ const sortByReleaseDate = (a, b) =>
 const EpisodesList = () => {
   const [characters, setCharacters] = useState([]);
   const episode = useSearchParam("episode");
+  const sortByColumn = useSearchParam("sortByColumn");
+  const sortOrder = useSearchParam("sortOrder");
   const gender = useSearchParam("gender");
   const {
     isLoading: isLoadingEpisodes,
@@ -36,11 +38,6 @@ const EpisodesList = () => {
     data: singleEpisode,
     refetch: refetchSingleEpisode,
   } = useQuery(episode ? `/films/${episode}` : null);
-
-  // useEffect(() => {
-  //   if (gender) {
-  //   }
-  // }, [gender, characters]);
 
   useEffect(() => {
     if (singleEpisodeLoaded) {
@@ -81,6 +78,20 @@ const EpisodesList = () => {
     } else {
       url.searchParams.delete("gender");
     }
+
+    window.history.pushState({}, "", url);
+  };
+
+  const handleTableFiltersChange = (filters) => {
+    const url = new URL(window.location);
+
+    Object.keys(filters).forEach((filter) => {
+      if (filters[filter]) {
+        url.searchParams.set(filter, filters[filter]);
+      } else {
+        url.searchParams.delete(filter);
+      }
+    });
 
     window.history.pushState({}, "", url);
   };
@@ -162,6 +173,7 @@ const EpisodesList = () => {
                   female: "Female",
                   "n/a": "Not available",
                   none: "Genderless",
+                  hermaphrodite: "Hermaphrodite",
                 }}
                 onSelectOption={handleGenderOptionSelect}
               />
@@ -170,6 +182,11 @@ const EpisodesList = () => {
           <Table
             schema={tableSchema}
             data={characters.filter(filterByGender)}
+            defaultFilters={{
+              sortOrder,
+              sortByColumn,
+            }}
+            onFiltersChange={handleTableFiltersChange}
           />
         </Container>
       ) : null}

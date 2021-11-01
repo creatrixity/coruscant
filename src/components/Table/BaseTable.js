@@ -8,13 +8,23 @@ import {
   Td,
   TableCaption,
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cm2Feet, cm2Inches } from "../../utils";
 
-const BaseTable = ({ data, schema }) => {
-  const [sortByColumn, setSortByColumn] = useState();
-  const [sortOrder, setSortOrder] = useState();
-  const totalHeight = data.reduce((acc, curr) => acc + Number(curr.height), 0);
+const BaseTable = ({ data, schema, defaultFilters, onFiltersChange }) => {
+  const [sortByColumn, setSortByColumn] = useState(defaultFilters.sortByColumn);
+  const [sortOrder, setSortOrder] = useState(defaultFilters.sortOrder);
+  const totalHeight = data.reduce(
+    (acc, curr) => (acc + isNaN(curr.height) ? 0 : Number(curr.height)),
+    0
+  );
+
+  useEffect(() => {
+    onFiltersChange({
+      sortByColumn,
+      sortOrder,
+    });
+  }, [sortByColumn, sortOrder, onFiltersChange]);
 
   const sortColumn = (column) => {
     if (sortByColumn) {
@@ -99,5 +109,9 @@ const BaseTable = ({ data, schema }) => {
 };
 
 BaseTable.propTypes = {};
+
+BaseTable.defaultProps = {
+  onHeaderClick: () => {},
+};
 
 export default BaseTable;
