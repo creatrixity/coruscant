@@ -97,7 +97,7 @@ const EpisodesList = () => {
   };
 
   const episodes = episodesLoaded
-    ? data.results
+    ? data.contents.results
         .sort(sortByReleaseDate)
         .map(({ title, url, episode_id }) => ({
           title,
