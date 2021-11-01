@@ -1,12 +1,13 @@
 import { Select } from ".";
 
-const EpisodesSelect = ({ episodes, onSelectEpisode }) => {
+const EpisodesSelect = ({ episodes, defaultEpisode, onSelectEpisode }) => {
   return (
     <Select
       bg="black"
       placeholder="Choose a movie to display"
       size="lg"
       color="white"
+      defaultValue={defaultEpisode}
       onChange={onSelectEpisode}
     >
       {episodes.map(({ title, url, episode_id }) => (
