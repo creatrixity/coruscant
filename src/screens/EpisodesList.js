@@ -153,7 +153,7 @@ const EpisodesList = () => {
         episode_id={episode}
         onRefetch={refetchSingleEpisode}
       />
-      {singleEpisodeLoaded ? (
+      {singleEpisodeLoaded && characters.length ? (
         <Container
           maxW="container.lg"
           mt={12}

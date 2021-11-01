@@ -8,14 +8,14 @@ import {
   Td,
   TableCaption,
 } from "@chakra-ui/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { cm2Feet, cm2Inches } from "../../utils";
 
 const BaseTable = ({ data, schema, defaultFilters, onFiltersChange }) => {
   const [sortByColumn, setSortByColumn] = useState(defaultFilters.sortByColumn);
   const [sortOrder, setSortOrder] = useState(defaultFilters.sortOrder);
   const totalHeight = data.reduce(
-    (acc, curr) => (acc + isNaN(curr.height) ? 0 : Number(curr.height)),
+    (acc, curr) => acc + (isNaN(curr.height) ? 0 : Number(curr.height)),
     0
   );
 
