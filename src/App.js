@@ -1,11 +1,14 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import EpisodesList from "./screens/EpisodesList";
+import { EpisodesListProvider } from "screens/EpisodesList/hooks/useEpisodesList";
+import EpisodesList from "screens/EpisodesList";
 
 function App() {
   return (
     <ChakraProvider>
       <div className="App">
-        <EpisodesList />
+        <EpisodesListProvider>
+          <EpisodesList />
+        </EpisodesListProvider>
       </div>
     </ChakraProvider>
   );

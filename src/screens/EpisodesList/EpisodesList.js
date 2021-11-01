@@ -8,22 +8,37 @@ import {
   EpisodesSelect,
   Skeleton,
   Table,
-} from "../components";
-import SingleEpisodeCrawl from "./SingleEpisodeCrawl";
-import useQuery from "../hooks/useQuery";
+} from "components";
+import SingleEpisodeCrawl from "./components/SingleEpisodeCrawl";
+import useQuery from "hooks/useQuery";
 import "./EpisodesList.css";
 import tableSchema from "./tableSchema";
 import { useEffect, useState } from "react";
+import { useEpisodesList } from "./hooks/useEpisodesList";
 
 const sortByReleaseDate = (a, b) =>
   new Date(a.release_date) - new Date(b.release_date);
 
 const EpisodesList = () => {
-  const [characters, setCharacters] = useState([]);
-  const episode = useSearchParam("episode");
-  const sortByColumn = useSearchParam("sortByColumn");
-  const sortOrder = useSearchParam("sortOrder");
-  const gender = useSearchParam("gender");
+  const [state, setState] = useEpisodesList();
+  const { characters, episode, sortByColumn, gender, sortOrder } = state;
+
+  // Obtain state parameters from the URL bar to use as a default
+  const episodeUrlParam = useSearchParam("episode");
+  const sortByColumnUrlParam = useSearchParam("sortByColumn");
+  const genderUrlParam = useSearchParam("gender");
+  const sortOrderUrlParam = useSearchParam("sortOrder");
+
+  useEffect(() => {
+    setState({
+      episode: episodeUrlParam,
+      sortByColumn: sortByColumnUrlParam,
+      gender: genderUrlParam,
+      sortOrder: sortOrderUrlParam,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const {
     isLoading: isLoadingEpisodes,
     isSuccess: episodesLoaded,
@@ -48,53 +63,15 @@ const EpisodesList = () => {
         });
 
         const characters = await Promise.all(requests);
-
-        setCharacters(characters);
+        setState({ characters });
       }
 
       fetchRequests();
     }
-  }, [singleEpisodeLoaded, singleEpisode?.characters]);
+  }, [singleEpisodeLoaded, singleEpisode?.characters, setState]);
 
-  const handleEpisodeSelect = (e) => {
-    const { value } = e.target;
-    const url = new URL(window.location);
-
-    if (value) {
-      url.searchParams.set("episode", value);
-    } else {
-      url.searchParams.delete("episode");
-    }
-
-    window.history.pushState({}, "", url);
-  };
-
-  const handleGenderOptionSelect = (e) => {
-    const { value } = e.target;
-    const url = new URL(window.location);
-
-    if (value) {
-      url.searchParams.set("gender", value);
-    } else {
-      url.searchParams.delete("gender");
-    }
-
-    window.history.pushState({}, "", url);
-  };
-
-  const handleTableFiltersChange = (filters) => {
-    const url = new URL(window.location);
-
-    Object.keys(filters).forEach((filter) => {
-      if (filters[filter]) {
-        url.searchParams.set(filter, filters[filter]);
-      } else {
-        url.searchParams.delete(filter);
-      }
-    });
-
-    window.history.pushState({}, "", url);
-  };
+  const handleEpisodeSelect = (e) => setState({ episode: e.target.value });
+  const handleGenderOptionSelect = (e) => setState({ gender: e.target.value });
 
   const episodes = episodesLoaded
     ? data.results
@@ -186,7 +163,6 @@ const EpisodesList = () => {
               sortOrder,
               sortByColumn,
             }}
-            onFiltersChange={handleTableFiltersChange}
           />
         </Container>
       ) : null}

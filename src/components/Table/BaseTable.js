@@ -11,20 +11,13 @@ import {
 import { useEffect, useState } from "react";
 import { cm2Feet, cm2Inches } from "../../utils";
 
-const BaseTable = ({ data, schema, defaultFilters, onFiltersChange }) => {
+const BaseTable = ({ data, schema, defaultFilters }) => {
   const [sortByColumn, setSortByColumn] = useState(defaultFilters.sortByColumn);
   const [sortOrder, setSortOrder] = useState(defaultFilters.sortOrder);
   const totalHeight = data.reduce(
     (acc, curr) => acc + (isNaN(curr.height) ? 0 : Number(curr.height)),
     0
   );
-
-  useEffect(() => {
-    onFiltersChange({
-      sortByColumn,
-      sortOrder,
-    });
-  }, [sortByColumn, sortOrder, onFiltersChange]);
 
   const sortColumn = (column) => {
     if (sortByColumn) {
@@ -111,7 +104,7 @@ const BaseTable = ({ data, schema, defaultFilters, onFiltersChange }) => {
 BaseTable.propTypes = {};
 
 BaseTable.defaultProps = {
-  onHeaderClick: () => {},
+  onFiltersChange: () => {},
 };
 
 export default BaseTable;

@@ -1,6 +1,6 @@
-import { ReactComponent as StarWarsLogo } from "../assets/star-wars-logo.svg";
+import { ReactComponent as StarWarsLogo } from "assets/star-wars-logo.svg";
 import { Spinner } from "@chakra-ui/spinner";
-import { Box, Button, Container } from "../components";
+import { Box, Button, Container } from "components";
 
 const SingleEpisodeCrawl = ({
   isLoading,
