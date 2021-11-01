@@ -10,6 +10,7 @@ const schema = [
   {
     name: "Height",
     accessor: "height",
+    isNumeric: true,
   },
 ];
 

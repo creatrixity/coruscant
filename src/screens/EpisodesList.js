@@ -161,6 +161,7 @@ const EpisodesList = () => {
                   male: "Male",
                   female: "Female",
                   "n/a": "Not available",
+                  none: "Genderless",
                 }}
                 onSelectOption={handleGenderOptionSelect}
               />
