@@ -1,0 +1,1 @@
+/api/* http://www.whateverorigin.org/get?url=https://swapi.dev/api/:splat 200!
