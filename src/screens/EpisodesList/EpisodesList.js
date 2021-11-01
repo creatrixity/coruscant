@@ -13,7 +13,7 @@ import SingleEpisodeCrawl from "./components/SingleEpisodeCrawl";
 import useQuery from "hooks/useQuery";
 import "./EpisodesList.css";
 import tableSchema from "./tableSchema";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useEpisodesList } from "./hooks/useEpisodesList";
 
 const sortByReleaseDate = (a, b) =>
