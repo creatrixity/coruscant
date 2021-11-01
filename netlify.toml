@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/api/*"
+  to = "http://www.whateverorigin.org/get?url=https://swapi.dev/api/:splat"
+  status = 200
+  force = true
