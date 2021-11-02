@@ -8,6 +8,7 @@ const EpisodesSelect = ({ episodes, defaultEpisode, onSelectEpisode }) => {
       size="lg"
       color="white"
       defaultValue={defaultEpisode}
+      aria-label="Episodes select"
       onChange={onSelectEpisode}
     >
       {episodes.map(({ title, url, episode_id }) => (
