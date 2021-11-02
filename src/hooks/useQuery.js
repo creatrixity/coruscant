@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 const api = {
   GET: async (url) => {
     const response = await fetch(url);
+    console.log(url);
+
     if (response.ok) {
       const data = await response.json();
       return data;
